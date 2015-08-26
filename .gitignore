@@ -1,0 +1,5 @@
+# Executable
+*.bin
+
+# Objects
+*.o

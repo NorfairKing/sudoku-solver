@@ -1,8 +1,12 @@
 CC = cc
 
+SRC_DIR = src
+
 WARNING_FLAGS = -Wall -Werror
+SRC_DIR_FLAGS = -I$(SRC_DIR)
 CFLAGS = \
-	$(WARNING_FLAGS)
+	$(WARNING_FLAGS) \
+	$(SRC_DIR_FLAGS)
 
 HEADER_EXT = h
 SOURCE_EXT = cc
@@ -15,8 +19,8 @@ DIRTY = $(DIRTY_EXT)
 EXE_NAME = sudoku
 EXE_BIN = $(EXE_NAME).$(EXE_EXT)
 
-SRCS = $(wildcard *.$(SOURCE_EXT))
-DEPS = $(wildcard *.$(HEADER_EXT))
+SRCS = $(wildcard src/*.$(SOURCE_EXT))
+DEPS = $(wildcard src/*.$(HEADER_EXT))
 OBJS = $(SRCS:.$(SOURCE_EXT)=.$(OBJECT_EXT))
 
 

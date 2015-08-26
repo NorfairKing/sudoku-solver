@@ -1,4 +1,4 @@
-CC = cc
+CC = g++
 
 SRC_DIR = src
 
@@ -27,7 +27,7 @@ OBJS = $(SRCS:.$(SOURCE_EXT)=.$(OBJECT_EXT))
 all: $(EXE_BIN)
 
 $(EXE_BIN): $(OBJS)
-		gcc -o $@ $^ $(CFLAGS) $(LIBS)
+		$(CC) -o $@ $^ $(CFLAGS) $(LIBS)
 
 %.$(OBJECT_EXT): %.$(SOURCE_EXT) $(DEPS)
 		$(CC) -c -o $@ $< $(CFLAGS)

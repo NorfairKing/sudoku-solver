@@ -1,10 +1,16 @@
 CC = cc
-CFLAGS = 
+
+WARNING_FLAGS = -Wall -Werror
+CFLAGS = \
+	$(WARNING_FLAGS)
 
 HEADER_EXT = h
 SOURCE_EXT = cc
 OBJECT_EXT = o
 EXE_EXT = bin
+
+DIRTY_EXT = *.$(EXE_EXT) *.$(OBJECT_EXT)
+DIRTY = $(DIRTY_EXT)
 
 EXE_NAME = sudoku
 EXE_BIN = $(EXE_NAME).$(EXE_EXT)
@@ -21,6 +27,9 @@ $(EXE_BIN): $(OBJS)
 
 %.$(OBJECT_EXT): %.$(SOURCE_EXT) $(DEPS)
 		$(CC) -c -o $@ $< $(CFLAGS)
+
+clean:
+	rm -rf $(DIRTY)
 
 love:
 	@echo not war

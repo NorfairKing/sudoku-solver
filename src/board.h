@@ -1,7 +1,8 @@
 #ifndef board_h__
 #define board_h__
 
-const int SIZE = 9;
+#include "option.h"
+#include "constants.h"
 
 class Board {
   private:
@@ -9,14 +10,17 @@ class Board {
     bool checkRow(int r);
     bool checkColumn(int c);
     bool checkBox(int b);
+    option getOption(int r, int x);
   public:
     Board();
     ~Board(); 
     short getTile(int x, int y);
+    short getTileFromBox(int box, int ix);
     void setTile(int x, int y, short n);
     bool isSolved();
-    friend std::ostream& operator<< (std::ostream &out, Board &board);
-    friend std::istream& operator>> (std::istream &in, Board &board);
+    void solve();
+    friend std::ostream& operator << (std::ostream& out, Board& board);
+    friend std::istream& operator >> (std::istream& in, Board& board);
 };
 
 #endif

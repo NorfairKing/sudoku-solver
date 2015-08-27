@@ -14,6 +14,7 @@ class Board {
     void scratchRow(bool possibilities[SIZE + 1], int r, int c);
     void scratchColumn(bool possibilities[SIZE + 1], int r, int c);
     void scratchBox(bool possibilities[SIZE + 1], int r, int c);
+    void fillOption(option o);
   public:
     Board();
     ~Board(); 

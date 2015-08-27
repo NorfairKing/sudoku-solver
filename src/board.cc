@@ -74,16 +74,28 @@ void Board::solve() {
 
   for (int r = 0; r < SIZE; ++r) {
     for (int c = 0; c < SIZE; ++c) {
+      if (getTile(r,c) != 0) { continue; }
       option o = getOption(r, c);
+      std::cout << o << std::endl;
       options.push(o);
+      if (o.nr_options <= 1) {
+        break;
+      }
     }
   }
-  /*while (!options.empty()) {
-    option o = options.top();
-    options.pop(); 
-    if (getTile(o.row, o.col) != 0) { continue; }
-    std::cout << o;
-  }*/
+  // Solved.
+  if (options.empty()) { return ;}
+
+  // Fill in next option and solve further.
+  option next = options.top();
+  fillOption(next);
+  std::cout << next << std::endl;
+  std::cout << *this << std::endl;
+  solve();
+}
+
+void Board:: fillOption(option o) {
+  setTile(o.row, o.col, o.default_option);
 }
 
 option Board::getOption(int r, int c) {
@@ -127,7 +139,7 @@ void Board::scratchRow(bool possibilities[SIZE + 1], int r, int c) {
 }
 
 void Board::scratchColumn(bool possibilities[SIZE + 1], int r, int c) {
-  for (int i = 0; i < SIZE && i != r; i++) {
+  for (int i = 0; i < SIZE; i++) {
     if (i == r) { continue; }
     // If tile (i,c) is set then (r,c) cannot be the same
     // so we scratch that possiblility off the list.
@@ -138,7 +150,8 @@ void Board::scratchColumn(bool possibilities[SIZE + 1], int r, int c) {
 void Board::scratchBox(bool possibilities[SIZE + 1], int r, int c) {
   int box = boxIndex(r,c);
   for (int i = 0; i < SIZE; ++i) {
-    if (i == indexByBox(r, c)) { continue; }
+    // i is the index in the box.
+    if (i == indexInBox(r, c)) { continue; }
     possibilities[getTileByBox(box, i)] = false;
   }
 }

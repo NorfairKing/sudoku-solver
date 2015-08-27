@@ -11,6 +11,8 @@ class Board {
     ~Board(); 
     short getTile(int x, int y);
     void setTile(int x, int y, short n);
+    friend std::ostream& operator<< (std::ostream &out, Board &board);
+    friend std::istream& operator>> (std::istream &in, Board &board);
 };
 
 #endif

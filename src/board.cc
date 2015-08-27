@@ -78,12 +78,12 @@ void Board::solve() {
       options.push(o);
     }
   }
-  while (!options.empty()) {
+  /*while (!options.empty()) {
     option o = options.top();
     options.pop(); 
     if (getTile(o.row, o.col) != 0) { continue; }
     std::cout << o;
-  }
+  }*/
 }
 
 option Board::getOption(int r, int c) {
@@ -158,12 +158,35 @@ std::istream& operator >> (std::istream &in, Board &board) {
 
 std::ostream& operator << (std::ostream &out, Board &board)
 {
+  out << std::endl;
+  out << " ";
+  for (int x = 0; x < 3*SIZE - 2; ++x) {
+    out << "-";
+  }
+  out << " ";
+  out << std::endl;
+
   for (int x = 0; x < SIZE; ++x) {
+    out << " | ";
     for (int y = 0; y < SIZE; ++y) {
       out << board.getTile(x, y);
+      if (y % BLOCK_SIZE == BLOCK_SIZE - 1) {
+        out << " | ";
+      } else {
+        out << " ";
+      }
+    }
+    if (x % BLOCK_SIZE  == BLOCK_SIZE - 1) {
+      out << std::endl;
+      out << " ";
+      for (int x = 0; x < 3*SIZE - 2; ++x) {
+        out << "-";
+      }
+      out << " ";
     }
     out << std::endl;
   }
 
+  out << std::endl;
   return out;
 }

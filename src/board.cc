@@ -76,7 +76,6 @@ void Board::solve() {
     for (int c = 0; c < SIZE; ++c) {
       if (getTile(r,c) != 0) { continue; }
       option o = getOption(r, c);
-      std::cout << o << std::endl;
       options.push(o);
       if (o.nr_options <= 1) {
         break;
@@ -89,8 +88,6 @@ void Board::solve() {
   // Fill in next option and solve further.
   option next = options.top();
   fillOption(next);
-  std::cout << next << std::endl;
-  std::cout << *this << std::endl;
   solve();
 }
 

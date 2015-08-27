@@ -6,29 +6,31 @@
 #include "index.h"
 
 Board::Board() {
-  for (int x; x < SIZE; ++x) {
-    for (int y; y < SIZE; ++y) {
-      tile[x][y] = 0;
-    }
+  for (int x; x < SIZE*SIZE; ++x) {
+    tile[x] = 0;
   }
 }
 
 Board::~Board() {}
 
-short Board::getTile(int x, int y) {
-  return tile[x][y];
+short Board::getTile(int ix) {
+  return tile[ix];
 }
 
-short Board::getTileFromBox(int box, int i) {
-  int blockRow = box / BLOCK_SIZE;
-  int blockCol = box % BLOCK_SIZE;
-  int rowInBlock = i / BLOCK_SIZE;
-  int colInBlock = i % BLOCK_SIZE;
-  return getTile(blockRow * BLOCK_SIZE + rowInBlock, blockCol * BLOCK_SIZE + colInBlock);
+short Board::getTile(int r, int c) {
+  return getTile(index(r,c));
 }
 
-void Board::setTile(int x, int y, short n) {
-  tile[x][y] = n;
+short Board::getTileByBox(int box, int i) {
+  return getTile(indexByBox(box, i));
+}
+
+void Board::setTile(int ix, short n) {
+  tile[ix] = n;
+}
+
+void Board::setTile(int r, int c, short n) {
+  setTile(index(r,c), n);
 }
 
 // http://math.stackexchange.com/questions/157682/does-a-solved-sudoku-game-always-have-same-sum-is-this-sum-unique-to-solved-gam
@@ -62,7 +64,7 @@ bool Board::checkColumn(int c) {
 bool Board::checkBox(int b) {
   short sum = 0;
   for (int i = 0; i < SIZE; ++i) {
-    sum += 1 << (getTileFromBox(b, i) - 1);
+    sum += 1 << (getTileByBox(b, i) - 1);
   }
   return sum == BLOCK_SUM;
 }
@@ -100,7 +102,7 @@ option Board::getOption(int r, int c) {
 
   int box = boxIndex(r,c);
   for (int i; i < SIZE && i != indexInBox(r,c); ++i) {
-    possibilities[getTileFromBox(box, i)] = false;
+    possibilities[getTileByBox(box, i)] = false;
   }
 
   int nr_poss = 0;

@@ -72,12 +72,18 @@ bool Board::checkBox(int b) {
 void Board::solve() {
   std::priority_queue<option, std::vector<option> > options;
 
-  for (int x = 0; x < SIZE; ++x) {
-    for (int y = 0; y < SIZE; ++y) {
-      
+  for (int r = 0; r < SIZE; ++r) {
+    for (int c = 0; c < SIZE; ++c) {
+      option o = getOption(r, c);
+      options.push(o);
     }
   }
-
+  while (!options.empty()) {
+    option o = options.top();
+    options.pop(); 
+    if (getTile(o.row, o.col) != 0) { continue; }
+    std::cout << o;
+  }
 }
 
 option Board::getOption(int r, int c) {
@@ -85,34 +91,20 @@ option Board::getOption(int r, int c) {
 
   // Initialize all but 0 to true.
   possibilities[0] = false;
-  for (int i; i < SIZE; ++i) { possibilities[i] = true; }
+  for (int i = 1; i <= SIZE; ++i) { possibilities[i] = true; }
 
-  // Check row
-  for (int i; i < SIZE && i != c; i++) {
-    // If tile (r,i) is set then (r,c) cannot be the same
-    // so we scratch that possiblility off the list.
-    possibilities[getTile(r, i)] = false;
-  }
-
-  for (int i; i < SIZE && i != r; i++) {
-    // If tile (i,c) is set then (r,c) cannot be the same
-    // so we scratch that possiblility off the list.
-    possibilities[getTile(i, c)] = false;
-  }
-
-  int box = boxIndex(r,c);
-  for (int i; i < SIZE && i != indexInBox(r,c); ++i) {
-    possibilities[getTileByBox(box, i)] = false;
-  }
+  scratchRow(possibilities, r, c);
+  scratchColumn(possibilities, r, c);
+  scratchBox(possibilities, r, c);
 
   int nr_poss = 0;
-  for (int i = 1; i < SIZE + 1; ++i) {
+  for (int i = 1; i <= SIZE; ++i) {
     if (possibilities[i]) { ++nr_poss; }
   }
 
-  int def = 0;
+  int def = 1;
   int i = 1;
-  while (! possibilities[i]) { ++i; }
+  while (!possibilities[i]) { ++i; }
   def = i;
 
   option o;
@@ -122,6 +114,33 @@ option Board::getOption(int r, int c) {
   o.default_option = def;
 
   return o;
+}
+
+void Board::scratchRow(bool possibilities[SIZE + 1], int r, int c) {
+  // Check row
+  for (int i = 0; i < SIZE; i++) {
+    if (i == c) { continue; }
+    // If tile (r,i) is set then (r,c) cannot be the same
+    // so we scratch that possiblility off the list.
+    possibilities[getTile(r, i)] = false;
+  }
+}
+
+void Board::scratchColumn(bool possibilities[SIZE + 1], int r, int c) {
+  for (int i = 0; i < SIZE && i != r; i++) {
+    if (i == r) { continue; }
+    // If tile (i,c) is set then (r,c) cannot be the same
+    // so we scratch that possiblility off the list.
+    possibilities[getTile(i, c)] = false;
+  }
+}
+
+void Board::scratchBox(bool possibilities[SIZE + 1], int r, int c) {
+  int box = boxIndex(r,c);
+  for (int i = 0; i < SIZE; ++i) {
+    if (i == indexByBox(r, c)) { continue; }
+    possibilities[getTileByBox(box, i)] = false;
+  }
 }
 
 std::istream& operator >> (std::istream &in, Board &board) {

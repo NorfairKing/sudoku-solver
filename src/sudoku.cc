@@ -4,6 +4,7 @@
 int main() {
   Board b;
   std::cin >> b;
+  b.solve();
   std::cout << b;
   bool solved = b.isSolved();
   //std::cout << BLOCK_SUM << std::endl;

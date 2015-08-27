@@ -11,6 +11,9 @@ class Board {
     bool checkColumn(int c);
     bool checkBox(int b);
     option getOption(int r, int x);
+    void scratchRow(bool possibilities[SIZE + 1], int r, int c);
+    void scratchColumn(bool possibilities[SIZE + 1], int r, int c);
+    void scratchBox(bool possibilities[SIZE + 1], int r, int c);
   public:
     Board();
     ~Board(); 

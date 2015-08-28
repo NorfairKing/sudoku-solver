@@ -172,6 +172,7 @@ std::istream& operator >> (std::istream &in, Board &board) {
 
 std::ostream& operator << (std::ostream &out, Board &board)
 {
+  int width = log(SIZE)-1;
   out << std::endl;
   out << " ";
   for (int x = 0; x < 3*SIZE - 2; ++x) {
@@ -184,7 +185,7 @@ std::ostream& operator << (std::ostream &out, Board &board)
   for (int x = 0; x < SIZE; ++x) {
     out << " | ";
     for (int y = 0; y < SIZE; ++y) {
-      out << std::setfill(' ') << std::setw(2) << board.getTile(x, y);
+      out << std::setfill(' ') << std::setw(width) << board.getTile(x, y);
       if (y % BLOCK_SIZE == BLOCK_SIZE - 1) {
         out << " | ";
       } else {

@@ -8,7 +8,7 @@
 #include "index.h"
 
 Board::Board() {
-  for (int x; x < SIZE*SIZE; ++x) {
+  for (int x = 0; x < SIZE*SIZE; ++x) {
     tile[x] = 0;
   }
 }

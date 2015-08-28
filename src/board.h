@@ -6,7 +6,7 @@
 
 class Board {
   private:
-    short tile[SIZE * SIZE];
+    int tile[SIZE * SIZE];
     bool checkRow(int r);
     bool checkColumn(int c);
     bool checkBox(int b);
@@ -18,11 +18,11 @@ class Board {
   public:
     Board();
     ~Board(); 
-    short getTile(int ix);
-    short getTile(int r, int c);
-    short getTileByBox(int r, int c);
-    void setTile(int ix, short n);
-    void setTile(int r, int c, short n);
+    int getTile(int ix);
+    int getTile(int r, int c);
+    int getTileByBox(int r, int c);
+    void setTile(int ix, int n);
+    void setTile(int r, int c, int n);
     bool isSolved();
     void solve();
     friend std::ostream& operator << (std::ostream& out, Board& board);

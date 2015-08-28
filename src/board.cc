@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <queue>
 #include "option.h"
@@ -13,23 +14,23 @@ Board::Board() {
 
 Board::~Board() {}
 
-short Board::getTile(int ix) {
+int Board::getTile(int ix) {
   return tile[ix];
 }
 
-short Board::getTile(int r, int c) {
+int Board::getTile(int r, int c) {
   return getTile(index(r,c));
 }
 
-short Board::getTileByBox(int box, int i) {
+int Board::getTileByBox(int box, int i) {
   return getTile(indexByBox(box, i));
 }
 
-void Board::setTile(int ix, short n) {
+void Board::setTile(int ix, int n) {
   tile[ix] = n;
 }
 
-void Board::setTile(int r, int c, short n) {
+void Board::setTile(int r, int c, int n) {
   setTile(index(r,c), n);
 }
 
@@ -46,7 +47,7 @@ bool Board::isSolved() {
 }
 
 bool Board::checkRow(int r) {
-  short sum = 0;
+  int sum = 0;
   for (int i = 0; i < SIZE; ++i) {
     sum += 1 << (getTile(r, i) - 1);
   }
@@ -54,7 +55,7 @@ bool Board::checkRow(int r) {
 }
 
 bool Board::checkColumn(int c) {
-  short sum = 0;
+  int sum = 0;
   for (int i = 0; i < SIZE; ++i) {
     sum += 1 << (getTile(i, c) - 1);
   }
@@ -62,7 +63,7 @@ bool Board::checkColumn(int c) {
 }
 
 bool Board::checkBox(int b) {
-  short sum = 0;
+  int sum = 0;
   for (int i = 0; i < SIZE; ++i) {
     sum += 1 << (getTileByBox(b, i) - 1);
   }
@@ -112,9 +113,12 @@ option Board::getOption(int r, int c) {
   }
 
   int def = 1;
-  int i = 1;
-  while (!possibilities[i]) { ++i; }
-  def = i;
+  for (int i = 1; i <= SIZE; i++) {
+    if (possibilities[i]) {
+      def = i;
+      break;
+    }
+  }
 
   option o;
   o.row = r;
@@ -154,7 +158,7 @@ void Board::scratchBox(bool possibilities[SIZE + 1], int r, int c) {
 }
 
 std::istream& operator >> (std::istream &in, Board &board) {
-  short buf;
+  int buf;
   for (int x = 0; x < SIZE; ++x) {
     for (int y = 0; y < SIZE; ++y) {
       in >> buf;
@@ -176,10 +180,11 @@ std::ostream& operator << (std::ostream &out, Board &board)
   out << " ";
   out << std::endl;
 
+
   for (int x = 0; x < SIZE; ++x) {
     out << " | ";
     for (int y = 0; y < SIZE; ++y) {
-      out << board.getTile(x, y);
+      out << std::setfill(' ') << std::setw(2) << board.getTile(x, y);
       if (y % BLOCK_SIZE == BLOCK_SIZE - 1) {
         out << " | ";
       } else {

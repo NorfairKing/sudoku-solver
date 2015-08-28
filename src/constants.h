@@ -3,8 +3,7 @@
 
 #include <cmath>
 
-const int BLOCK_SIZE = 5;
+const int BLOCK_SIZE = 3;
 const int SIZE = BLOCK_SIZE*BLOCK_SIZE;
-const long BLOCK_SUM = (1 << SIZE) - 1;
 
 #endif

@@ -7,9 +7,6 @@
 class Board {
   private:
     int tile[SIZE * SIZE];
-    bool checkRow(int r);
-    bool checkColumn(int c);
-    bool checkBox(int b);
     option getOption(int r, int x);
     void scratchRow(bool possibilities[SIZE + 1], int r, int c);
     void scratchColumn(bool possibilities[SIZE + 1], int r, int c);
@@ -23,7 +20,6 @@ class Board {
     int getTileByBox(int r, int c);
     void setTile(int ix, int n);
     void setTile(int r, int c, int n);
-    bool isSolved();
     void solve();
     friend std::ostream& operator << (std::ostream& out, Board& board);
     friend std::istream& operator >> (std::istream& in, Board& board);

@@ -34,42 +34,6 @@ void Board::setTile(int r, int c, int n) {
   setTile(index(r,c), n);
 }
 
-// http://math.stackexchange.com/questions/157682/does-a-solved-sudoku-game-always-have-same-sum-is-this-sum-unique-to-solved-gam
-bool Board::isSolved() {
-  bool b;
-  for (int i = 0; i < SIZE; ++i) {
-    b = checkRow(i) && checkColumn(i) && checkBox(i);
-    if (!b) {
-      return false;
-    }
-  }
-  return true;
-}
-
-bool Board::checkRow(int r) {
-  int sum = 0;
-  for (int i = 0; i < SIZE; ++i) {
-    sum += 1 << (getTile(r, i) - 1);
-  }
-  return sum == BLOCK_SUM;
-}
-
-bool Board::checkColumn(int c) {
-  int sum = 0;
-  for (int i = 0; i < SIZE; ++i) {
-    sum += 1 << (getTile(i, c) - 1);
-  }
-  return sum == BLOCK_SUM;
-}
-
-bool Board::checkBox(int b) {
-  int sum = 0;
-  for (int i = 0; i < SIZE; ++i) {
-    sum += 1 << (getTileByBox(b, i) - 1);
-  }
-  return sum == BLOCK_SUM;
-}
-
 void Board::solve() {
   std::priority_queue<option, std::vector<option> > options;
 

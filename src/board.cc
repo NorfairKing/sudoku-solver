@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <vector>
 #include <queue>
+#include <climits>
 #include "option.h"
 #include "board.h"
 #include "index.h"
@@ -35,24 +36,28 @@ void Board::setTile(int r, int c, int n) {
 }
 
 void Board::solve() {
-  std::priority_queue<option, std::vector<option> > options;
-
+  bool found = false;
+  option bestOption;
+  bestOption.nr_options = INT_MAX;
   for (int r = 0; r < SIZE; ++r) {
     for (int c = 0; c < SIZE; ++c) {
       if (getTile(r,c) != 0) { continue; }
+      found = true;
       option o = getOption(r, c);
-      options.push(o);
       if (o.nr_options <= 1) {
+        bestOption = o;
         break;
+      }
+      if (o.nr_options < bestOption.nr_options) {
+        bestOption = o;
       }
     }
   }
   // Solved.
-  if (options.empty()) { return ;}
+  if (!found) { return ;}
 
   // Fill in next option and solve further.
-  option next = options.top();
-  fillOption(next);
+  fillOption(bestOption);
   solve();
 }
 

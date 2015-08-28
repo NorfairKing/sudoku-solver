@@ -154,13 +154,13 @@ void Board::scratchBox(bool possibilities[SIZE + 1], int r, int c) {
 }
 
 std::istream& operator >> (std::istream &in, Board &board) {
-  char buf;
+  short buf;
   for (int x = 0; x < SIZE; ++x) {
     for (int y = 0; y < SIZE; ++y) {
-      in.get(buf);
-      board.setTile(x, y, buf - '0');
+      in >> buf;
+      board.setTile(x, y, buf);
     }
-    in.get();
+    in.get(); // Get newline
   }
   
   return in;

@@ -172,10 +172,11 @@ std::istream& operator >> (std::istream &in, Board &board) {
 
 std::ostream& operator << (std::ostream &out, Board &board)
 {
-  int width = log(SIZE)-1;
+  int width = ceil(log10(SIZE));
+  int totalWidth = (width+1)*SIZE + 2*BLOCK_SIZE + 1;
   out << std::endl;
   out << " ";
-  for (int x = 0; x < 3*SIZE - 2; ++x) {
+  for (int x = 0; x < (width+1)*SIZE + 2*BLOCK_SIZE + 1; ++x) {
     out << "-";
   }
   out << " ";
@@ -195,7 +196,7 @@ std::ostream& operator << (std::ostream &out, Board &board)
     if (x % BLOCK_SIZE  == BLOCK_SIZE - 1) {
       out << std::endl;
       out << " ";
-      for (int x = 0; x < 3*SIZE - 2; ++x) {
+      for (int x = 0; x < totalWidth; ++x) {
         out << "-";
       }
       out << " ";

@@ -3,6 +3,7 @@
 #include <vector>
 #include <queue>
 #include <climits>
+#include <cmath>
 #include "option.h"
 #include "board.h"
 #include "index.h"
@@ -39,12 +40,21 @@ void Board::solve() {
   // If the board is already solved, we're done.
   if (isSolved()) { return; }
 
+  // Whether any option has been found
   bool foundAny = false;
+
+  // Whether a single best option has been found.
   bool foundSingleBest = false;
+
+  // The current best option (least amount of possibilities to fill the tile) found.
   option bestOption;
-  bestOption.nr_options = INT_MAX;
+  bestOption.row = -1; bestOption.col = -1; // Just so it's initialised.
+  bestOption.nr_options = INT_MAX; // High so any option is better
+
+  // The best options found (if there's more than one).
   std::vector<option> bestOptions;
 
+  // Search first, act later.
   for (int r = 0; r < SIZE; ++r) {
     for (int c = 0; c < SIZE; ++c) {
 

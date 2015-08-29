@@ -16,7 +16,6 @@ class Board {
     bool checkColumn(int r);
     bool checkBox(int r);
     void copyTo(Board *other);
-    int filledIn();
   public:
     Board();
     ~Board(); 

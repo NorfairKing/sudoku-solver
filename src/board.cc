@@ -35,14 +35,6 @@ void Board::setTile(int r, int c, int n) {
   setTile(index(r,c), n);
 }
 
-int Board::filledIn() {
-  int f = 0;
-  for (int i = 0; i < SIZE*SIZE; ++i) {
-    if (getTile(i) != 0) { ++f; }
-  }
-  return f;
-}
-
 void Board::solve() {
   // If the board is already solved, we're done.
   if (isSolved()) { return; }

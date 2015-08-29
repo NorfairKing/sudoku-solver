@@ -15,10 +15,7 @@ class Board {
     bool checkRow(int r);
     bool checkColumn(int r);
     bool checkBox(int r);
-    void copyTo(Board *other);
   public:
-    Board();
-    ~Board(); 
     int getTile(int ix);
     int getTile(int r, int c);
     int getTileByBox(int r, int c);

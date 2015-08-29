@@ -8,14 +8,6 @@
 #include "board.h"
 #include "index.h"
 
-Board::Board() {
-  for (int x = 0; x < SIZE*SIZE; ++x) {
-    tile[x] = 0;
-  }
-}
-
-Board::~Board() {}
-
 int Board::getTile(int ix) {
   return tile[ix];
 }
@@ -82,12 +74,11 @@ void Board::solve() {
     // a solution is found.
     for (int i = 1; i <= SIZE; ++i) {
       if (!bestOption.options[i]) { continue; }
-      Board b;
-      this->copyTo(&b);
+      Board b = *this; // copy
       b.setTile(bestOption.row, bestOption.col, i);
       b.solve();
       if (b.isSolved()) {
-        b.copyTo(this);
+        *this = b; // copy back
         break;
       }
     }
@@ -99,14 +90,6 @@ void Board::solve() {
     return;
   }
   solve();
-}
-
-void Board::copyTo(Board *other) {
-  for (int r = 0; r < SIZE; ++r) {
-    for (int c = 0; c < SIZE; ++c) {
-      other->setTile(r,c,getTile(r,c));
-    }
-  }
 }
 
 option Board::getOption(int r, int c) {

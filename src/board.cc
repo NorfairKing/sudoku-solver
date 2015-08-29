@@ -36,33 +36,88 @@ void Board::setTile(int r, int c, int n) {
 }
 
 void Board::solve() {
-  bool found = false;
+  // If the board is already solved, we're done.
+  if (isSolved()) { return; }
+
+  bool foundAny = false;
+  bool foundSingleBest = false;
   option bestOption;
   bestOption.nr_options = INT_MAX;
+  std::vector<option> bestOptions;
+
   for (int r = 0; r < SIZE; ++r) {
     for (int c = 0; c < SIZE; ++c) {
+
+      // If the tile is not empty, don't consider it.
       if (getTile(r,c) != 0) { continue; }
-      found = true;
+
+      // Calculate the options for this tile.
       option o = getOption(r, c);
-      if (o.nr_options <= 1) {
+
+      // If the number of options is 0, something went wrong and this board is not solvable.
+      if (o.nr_options == 0) { return; }
+
+      // The nuber of options is non-zero, so we found an option.
+      foundAny = true;
+
+      // We've found an option that we should definitely explore
+      if (o.nr_options == 1) {
         bestOption = o;
+        foundSingleBest = true;
         break;
       }
+
+      // If this option is better, set it as the new best option.
       if (o.nr_options < bestOption.nr_options) {
+        bestOptions.clear();
         bestOption = o;
+        bestOptions.push_back(o);
+      }
+
+      // If it's just as good, add it to the others.
+      if (o.nr_options == bestOption.nr_options) {
+        bestOptions.push_back(o);
       }
     }
   }
-  // Solved.
-  if (!found) { return ;}
 
-  // Fill in next option and solve further.
-  fillOption(bestOption);
+  // If a single best option was found, implement it and go on.
+  if (foundSingleBest) {
+    int choice = 0;
+    for (int i = 1; i <= SIZE; ++i) {
+      if (bestOption.options[i]) { choice = i; break; }
+    }
+    setTile(bestOption.row, bestOption.col, choice);
+  } else if (foundAny) {
+    // Make all possible boards and pick the first one that gets solved.
+    for(std::vector<option>::reverse_iterator it = bestOptions.rbegin(); it != bestOptions.rend(); ++it) {
+      for (int i = 1; i <= SIZE; ++i) {
+        if (!it->options[i]) { continue; }
+        Board b;
+        this->copyTo(&b);
+        b.setTile(it->row, it->col, i);
+        b.solve();
+        if (b.isSolved()) {
+          b.copyTo(this);
+          break;
+        }
+      }
+    }
+
+  } else {
+    // If there were no options found there and the sudoku wasn't solved already,
+    // there is no way to solve it.
+    return;
+  }
   solve();
 }
 
-void Board:: fillOption(option o) {
-  setTile(o.row, o.col, o.default_option);
+void Board::copyTo(Board *other) {
+  for (int r = 0; r < SIZE; ++r) {
+    for (int c = 0; c < SIZE; ++c) {
+      other->setTile(r,c,getTile(r,c));
+    }
+  }
 }
 
 option Board::getOption(int r, int c) {
@@ -81,19 +136,13 @@ option Board::getOption(int r, int c) {
     if (possibilities[i]) { ++nr_poss; }
   }
 
-  int def = 1;
-  for (int i = 1; i <= SIZE; i++) {
-    if (possibilities[i]) {
-      def = i;
-      break;
-    }
-  }
-
   option o;
   o.row = r;
   o.col = c;
   o.nr_options = nr_poss;
-  o.default_option = def;
+  for (int i = 0; i <= SIZE; ++i) {
+    o.options[i] = possibilities[i];
+  }
 
   return o;
 }

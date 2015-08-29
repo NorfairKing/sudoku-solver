@@ -35,6 +35,14 @@ void Board::setTile(int r, int c, int n) {
   setTile(index(r,c), n);
 }
 
+int Board::filledIn() {
+  int f = 0;
+  for (int i = 0; i < SIZE*SIZE; ++i) {
+    if (getTile(i) != 0) { ++f; }
+  }
+  return f;
+}
+
 void Board::solve() {
   // If the board is already solved, we're done.
   if (isSolved()) { return; }
@@ -89,7 +97,8 @@ void Board::solve() {
     }
     setTile(bestOption.row, bestOption.col, choice);
   } else if (foundAny) {
-    // Make all possible boards and pick the first one that gets solved.
+    // If we have multiple best options, make all possible boards and pick the
+    // first one that gets solved.
     for(std::vector<option>::reverse_iterator it = bestOptions.rbegin(); it != bestOptions.rend(); ++it) {
       for (int i = 1; i <= SIZE; ++i) {
         if (!it->options[i]) { continue; }
@@ -100,10 +109,12 @@ void Board::solve() {
         if (b.isSolved()) {
           b.copyTo(this);
           break;
+        } else {
         }
       }
+      // Still found nothing, this is not solveable.
+      return;
     }
-
   } else {
     // If there were no options found there and the sudoku wasn't solved already,
     // there is no way to solve it.

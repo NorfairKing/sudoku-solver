@@ -12,6 +12,9 @@ class Board {
     void scratchColumn(bool possibilities[SIZE + 1], int r, int c);
     void scratchBox(bool possibilities[SIZE + 1], int r, int c);
     void fillOption(option o);
+    bool checkRow(int r);
+    bool checkColumn(int r);
+    bool checkBox(int r);
   public:
     Board();
     ~Board(); 
@@ -21,6 +24,7 @@ class Board {
     void setTile(int ix, int n);
     void setTile(int r, int c, int n);
     void solve();
+    bool isSolved();
     friend std::ostream& operator << (std::ostream& out, Board& board);
     friend std::istream& operator >> (std::istream& in, Board& board);
 };

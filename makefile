@@ -22,7 +22,7 @@ DIRTY = $(DIRTY_EXT)
 EXE_NAME = sudoku
 EXE_BIN = $(EXE_NAME).$(EXE_EXT)
 
-MAIN_SRC = $(SRC_DIR)/sudoku.cc
+MAIN_SRC = $(SRC_DIR)/main.cc
 SRCS = $(wildcard $(SRC_DIR)/*.$(SOURCE_EXT))
 DEPS = $(wildcard $(SRC_DIR)/*.$(HEADER_EXT))
 OBJS = $(SRCS:.$(SOURCE_EXT)=.$(OBJECT_EXT))

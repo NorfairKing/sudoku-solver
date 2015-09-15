@@ -38,7 +38,7 @@ $(EXE_BIN): $(OBJS)
 %.$(OBJECT_EXT): %.$(SOURCE_EXT) $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-TESTSUITE = testsuite.bin
+TESTSUITE = testsuite.$(EXE_EXT)
 TEST_SRCS = $(wildcard $(TEST_DIR)/*.$(SOURCE_EXT))
 TEST_LIB_FLAGS = -lgtest
 TEST_DIR_FLAGS = -I$(TEST_DIR)
@@ -54,6 +54,23 @@ test: $(TESTSUITE)
 
 $(TESTSUITE): $(TEST_SRCS)
 	$(CC) $(TEST_SRCS) $(filter-out $(MAIN_SRC),$(SRCS)) $(TEST_FLAGS)
+
+BENCHMARKER = benchmarker.$(EXE_EXT)
+BM_DIR = benchmark
+BM_SRCS = $(wildcard $(BM_DIR)/*.$(SOURCE_EXT))
+BM_DIR_FLAGS = -I$(BM_DIR)
+BM_OUT_FLAG = -o $(BENCHMARKER)
+BM_FLAGS = \
+	$(CFLAGS) \
+	$(BM_DIR_FLAGS) \
+	$(BM_OUT_FLAG)
+
+
+benchmark: $(BENCHMARKER)
+	./$(BENCHMARKER)
+
+$(BENCHMARKER): $(BM_SRCS)
+	$(CC) $(BM_SRCS) $(filter-out $(MAIN_SRC),$(SRCS)) $(BM_FLAGS)
 
 clean:
 	find . -name "*.$(OBJECT_EXT)" -type f -delete

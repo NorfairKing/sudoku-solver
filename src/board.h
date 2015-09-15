@@ -8,9 +8,9 @@ class Board {
   private:
     int tile[SIZE * SIZE];
     option getOption(int r, int x);
-    void scratchRow(bool possibilities[SIZE + 1], int r, int c);
-    void scratchColumn(bool possibilities[SIZE + 1], int r, int c);
-    void scratchBox(bool possibilities[SIZE + 1], int r, int c);
+    void scratchRow(option& o, int r, int c);
+    void scratchColumn(option& o, int r, int c);
+    void scratchBox(option& o, int r, int c);
     void fillOption(option o);
     bool checkRow(int r);
     bool checkColumn(int r);

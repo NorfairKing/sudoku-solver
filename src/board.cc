@@ -4,9 +4,12 @@
 #include <queue>
 #include <climits>
 #include <cmath>
+
 #include "option.h"
 #include "board.h"
 #include "index.h"
+
+static constexpr int ALL_OPTIONS = (1 << SIZE) - 1;
 
 int Board::getTile(int ix) {
   return tile[ix];
@@ -73,7 +76,7 @@ void Board::solve() {
     // Go over all possibilities, fill each one in and solve recursively untill
     // a solution is found.
     for (int i = 1; i <= SIZE; ++i) {
-      if (!bestOption.options[i]) { continue; }
+      if (!has_option(bestOption, i)) { continue; }
       Board b = *this; // copy
       b.setTile(bestOption.row, bestOption.col, i);
       b.solve();
@@ -92,54 +95,65 @@ void Board::solve() {
   solve();
 }
 
+int bit_count (int value) {
+  int count = 0;
+  while (value > 0) {           // until all bits are zero
+    if ((value & 1) == 1)     // check lower bit
+      count++;
+    value >>= 1;              // shift bits, removing lower bit
+  }
+  return count;
+}
+
+
 option Board::getOption(int r, int c) {
   option o;
   o.row = r;
   o.col = c;
 
-  // Initialize all but 0 to true.
-  o.options[0] = false;
-  for (int i = 1; i <= SIZE; ++i) { o.options[i] = true; }
+  // Initialize all to true.
+  o.options = ALL_OPTIONS;
 
   // Scratch off every number that's not possible.
-  scratchRow(o.options, r, c);
-  scratchColumn(o.options, r, c);
-  scratchBox(o.options, r, c);
+  scratchRow(o, r, c);
+  scratchColumn(o, r, c);
+  scratchBox(o, r, c);
 
   // Cache nr of possibilities.
-  o.nr_options = 0;
-  for (int i = 0; i <= SIZE; ++i) {
-    if (o.options[i]) { ++o.nr_options; }
-  }
+  o.nr_options = bit_count(o.options);
 
   return o;
 }
 
-void Board::scratchRow(bool possibilities[SIZE + 1], int r, int c) {
-  // Check row
+int scratcher(int i) {
+  if (i == 0) { return ALL_OPTIONS; }
+  return ALL_OPTIONS - (1 << (i - 1));
+}
+void Board::scratchRow(option& o, int r, int c) {
+  // Check row 
   for (int i = 0; i < SIZE; i++) {
     if (i == c) { continue; }
     // If tile (r,i) is set then (r,c) cannot be the same
     // so we scratch that possiblility off the list.
-    possibilities[getTile(r, i)] = false;
+    o.options &= scratcher(getTile(r, i));
   }
 }
 
-void Board::scratchColumn(bool possibilities[SIZE + 1], int r, int c) {
+void Board::scratchColumn(option& o, int r, int c) {
   for (int i = 0; i < SIZE; i++) {
     if (i == r) { continue; }
     // If tile (i,c) is set then (r,c) cannot be the same
     // so we scratch that possiblility off the list.
-    possibilities[getTile(i, c)] = false;
+    o.options &= scratcher(getTile(i,c));
   }
 }
 
-void Board::scratchBox(bool possibilities[SIZE + 1], int r, int c) {
+void Board::scratchBox(option& o, int r, int c) {
   int box = boxIndex(r,c);
   for (int i = 0; i < SIZE; ++i) {
     // i is the index in the box.
     if (i == indexInBox(r, c)) { continue; }
-    possibilities[getTileByBox(box, i)] = false;
+    o.options &= scratcher(getTileByBox(box, i));
   }
 }
 
